@@ -18,7 +18,7 @@ import torch
 torch.set_float32_matmul_precision("high")
 
 from lit_gpt import GPT, Tokenizer, Config
-from lit_gpt.utils import lazy_load, quantization
+from lit_gpt.utils import lazy_load, gptq_quantization as quantization
 
 # Toy submission imports
 from helper import toysubmission_generate

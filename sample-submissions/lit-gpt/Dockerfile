@@ -1,7 +1,7 @@
 # Use an official Python runtime as a parent image
 # other options in https://github.com/orgs/pytorch/packages/container/pytorch-nightly/versions?filters%5Bversion_type%5D=tagged
 # Lit-GPT requires current nightly (future 2.1) for the latest attention changes
-FROM ghcr.io/pytorch/pytorch-nightly:c69b6e5-cu11.8.0
+FROM pytorch/pytorch:2.1.0-cuda11.8-cudnn8-devel
 
 # Set the working directory in the container to /submission
 WORKDIR /submission
@@ -15,7 +15,9 @@ RUN pip install --no-cache-dir --upgrade -r fast_api_requirements.txt
 
 RUN apt-get update && apt-get install -y git
 # Install any needed packages specified in requirements.txt that come from lit-gpt plus some optionals
-RUN pip install -r requirements.txt huggingface_hub sentencepiece tokenizers bitsandbytes scipy
+RUN pip install -r requirements-all.txt huggingface_hub
+RUN MAX_JOBS=4 pip install flash-attn --no-build-isolation
+RUN pip install .
 
 # some huggingface_hub versions require that the target dir exists
 RUN mkdir -p checkpoints/openlm-research/open_llama_3b
